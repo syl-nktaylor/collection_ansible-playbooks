@@ -1,0 +1,11 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on RHEL 7.4
+#------------------------------------------------------------------------------
+
+- hosts: all
+  tasks:
+    - name: Run static command
+      shell: pwd
+      register: result
+      failed_when: result.stdout | length > 0

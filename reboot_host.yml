@@ -1,0 +1,16 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on RHEL 7.4
+#------------------------------------------------------------------------------
+
+- hosts: all
+  tasks:
+    - name: reboot RHEL hosts
+      shell: shutdown -r now 'Reboot initiated from Ansible'
+      async: 1
+      ignore_errors: 1
+      
+    - name: Wait until hosts become reachable after reboot
+      wait_for_connection:
+        delay: 10
+        timeout: 600

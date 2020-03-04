@@ -1,0 +1,14 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on RHEL 7.4
+#------------------------------------------------------------------------------
+
+- name: Error handling
+  block:
+    - name: Run static command
+      shell: pwd
+      register: result
+      failed_when: result.stdout | length > 0
+  rescue:
+    - debug:
+        msg: "Ignore this error"

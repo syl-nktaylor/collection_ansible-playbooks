@@ -1,0 +1,15 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on RHEL 7.4
+#------------------------------------------------------------------------------
+
+- hosts: all
+  tasks:
+    - name: Check for current user
+      shell: whoami
+      register: curr_user
+      
+    - name: Check for all logged-in users
+      shell: users
+      register: all_users
+      failed_when: all_users.stdout != curr_user.stdout

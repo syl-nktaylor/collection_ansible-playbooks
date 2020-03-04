@@ -1,4 +1,8 @@
 ---
+#------------------------------------------------------------------------------
+# Note: Tested on RHEL 7.4
+#------------------------------------------------------------------------------
+
 # Combine multiple playbooks
   - import_playbook: pass_vars_pb1.yml
   - import_playbook: pass_vars_pb2.yml

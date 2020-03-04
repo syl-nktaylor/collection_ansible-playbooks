@@ -1,0 +1,5 @@
+---
+- hosts: all
+  tasks:
+    - name: Run static command
+      shell: cd "{{ part1_output.stdout}}"

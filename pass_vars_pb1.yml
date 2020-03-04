@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+    - name: Run static command | Get output
+      shell: pwd
+      register: part1_output
+      
+    - debug: msg="{{ part1_output.stdout}}"

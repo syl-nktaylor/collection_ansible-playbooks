@@ -1,0 +1,15 @@
+---
+
+- hosts: all
+  tasks:
+    - block:
+        - name: Execute command
+          shell: <command>
+      rescue:
+        - mail:
+            host: <mail server>
+            port: 25
+            from: <email address>
+            to: <email_address>
+            subject: Failure
+            body: 'Unable to execute command on host {{ ansible_hostname }}.'

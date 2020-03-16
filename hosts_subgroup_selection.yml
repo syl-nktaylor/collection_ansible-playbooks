@@ -1,0 +1,25 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on RHEL 7.4
+#------------------------------------------------------------------------------
+
+- hosts: all
+  connection: local
+  gather_facts: no
+  tasks:
+    - block:
+        - name: find hosts that are running
+          wait_for_connection:
+            timeout: 10
+          vars:
+            ansible_connection: ssh
+        - name: add to the active_hosts group
+          group_by:
+            key: "active_hosts"
+      rescue:
+        - debug: msg="Cannot connect to {{ inventory_hostname }}"
+
+- hosts: active_hosts
+  tasks:
+    - name: Run static command
+      shell: pwd

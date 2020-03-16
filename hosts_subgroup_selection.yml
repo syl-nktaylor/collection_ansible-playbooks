@@ -21,5 +21,8 @@
 
 - hosts: active_hosts
   tasks:
-    - name: Run static command
-      shell: pwd
+    - block:
+        - name: Execute command
+          shell: <command>
+      rescue:
+        - mail: <params>

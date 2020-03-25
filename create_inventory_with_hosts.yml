@@ -1,0 +1,36 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on RHEL 7.4
+#------------------------------------------------------------------------------
+
+- hosts: all
+  tasks:
+    - block:
+        - name: Enforce failure
+          shell: pwd
+          register: result
+          failed_when: result.stdout | length > 0
+      rescue:
+        - name: add to the failed_hosts group
+          group_by:
+            key: "failed_hosts"
+
+# run once on Tower host            
+- hosts: all[0]
+  connection: local
+  gather_facts: no
+  tasks:
+        # will use existing inventory if found
+    - name: create failed hosts inventory
+      tower_inventory:
+        name: "failed"
+        description: "Failed Hosts"
+        organization: <org>
+        state: present
+        # append to inventory
+    - name: add failed hosts to inventory
+      tower_host:
+        name: "{{ item }}"
+        inventory: "failed" 
+        state: present
+      loop: "{{ groups['failed_hosts'] }}"

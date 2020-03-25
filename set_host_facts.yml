@@ -1,0 +1,31 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on RHEL 7.4
+#------------------------------------------------------------------------------
+
+- hosts: all
+  connection: local
+  gather_facts: no
+  tasks:
+    - block:
+        - name: find running hosts
+          wait_for_connection:
+            timeout: 10
+          vars:
+            ansible_connection: ssh
+                 # use fact cache for variables to be used across playbooks
+        - set_fact:
+            host_status: "available"
+            cacheable: yes
+      rescue:
+        - name: add to the unreachable_hosts group
+          group_by:
+            key: "unreachable_hosts"
+
+# Does not execute anything, on purpose
+- hosts: all:!unreachable_hosts
+  gather_facts: no
+  tasks:
+    - name: Run test command
+      shell: pwd
+      when: ansible_facts["host_status"] != "available"

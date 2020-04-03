@@ -1,0 +1,12 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on RHEL 7.4
+#------------------------------------------------------------------------------
+
+- hosts: all
+  tasks:
+    - name: create new directories
+      file:
+        path: /dir1/dir2/dir3
+        state: directory
+        mode: u=rw,g=r,o=r

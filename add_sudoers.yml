@@ -1,0 +1,11 @@
+---
+
+- hosts: all
+  tasks:
+    - name: configure sudoers
+      template:
+        src: templates/customgroup.j2
+        dest: /etc/sudoers.d/customgroup
+        mode: 0440
+        validate: /usr/sbin/visudo -cf %s
+      become: yes

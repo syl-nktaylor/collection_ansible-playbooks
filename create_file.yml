@@ -1,0 +1,13 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on RHEL 7.4
+#------------------------------------------------------------------------------
+
+- hosts: all
+  tasks:
+    - name: create new file
+      file:
+                 # assumes dir exists
+        path: /dir/file
+        state: touch
+        mode: u=rwx

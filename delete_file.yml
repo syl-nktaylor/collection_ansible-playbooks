@@ -1,0 +1,17 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on RHEL 7.4
+#------------------------------------------------------------------------------
+
+- hosts: all
+  tasks:
+    - name: check if file exists
+      stat:
+        path: /dir/file
+      register: result  
+    
+    - name: delete file
+      file:
+        path: /dir/file
+        state: absent
+      when: result.stat.exists

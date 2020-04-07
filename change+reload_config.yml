@@ -1,0 +1,19 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on Ubuntu 18.04
+#------------------------------------------------------------------------------
+
+# Use ptrace as example
+- hosts: all
+  tasks:
+    - name: enable ptrace all debugging
+      lineinfile:
+        path: /etc/sysctl.d/10-ptrace.conf
+        regexp: "kernel.yama.ptrace_scope"
+        line: "kernel.yama.ptrace_scope = 0"
+      notify: reload settings
+      when: (ansible_os_family == "Debian")
+  handlers:
+    - name: reload settings
+      command:
+        "sysctl --system"

@@ -1,0 +1,32 @@
+# Examples
+
+[baremetal-servers:children]
+baremetal-servers-x86
+baremetal-servers-aarch64
+
+[baremetal-servers-x86]
+rhel-7-4-amd64-[01:10].example.com
+
+[baremetal-servers-aarch64]
+rhel-7-4-aarch64-[a:h].example.com
+
+[jenkins-slaves:children]
+linux-jenkins-slaves
+windows-jenkins-slaves
+macos-jenkins-slaves
+
+[linux-jenkins-slaves]
+jenkins-slave-ubuntu-[0:10].example.com
+
+[windows-jenkins-slaves]
+jenkins-slave-win-[0:10].example.com
+
+[macos-jenkins-slaves]
+jenkins-slave-macos-[0:10].example.com
+
+[stack-test]
+rhel-7-4-x86-test-1 ansible_python_interpreter=/usr/bin/python3
+rhel-7-4-aarch64-test-2 ansible_python_interpreter=/usr/bin/python2
+
+[stack-test:vars]
+ntp_server=ntp.loc.example.com

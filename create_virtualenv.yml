@@ -1,0 +1,27 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on Ubuntu 18.04
+#------------------------------------------------------------------------------
+
+- hosts: all
+  vars:
+    virtual_env: "example"
+    pip_packages: "{{ python2_packages }}"
+    python_path: /usr/bin/python3
+    base_path: /virtualenvs
+  pre_tasks:
+    - name: Include package vars
+      include_vars: sample-packages.yml
+  tasks:
+    - name: Create virtualenv {{ virtual_env }}
+      shell: "{{ python_path }} -m venv {{ base_path }}/{{ virtual_env }}"
+      args:
+        creates: "{{ base_path }}/{{ virtual_env }}"
+
+    - name: Activate {{ virtual_env }} environment and upgrade pip
+      shell: ". {{ base_path }}/{{ virtual_env }}/bin/activate && pip install --upgrade pip"
+      when: pip_packages is defined and pip_packages != None
+
+    - name: Activate {{ virtual_env }} environment and install packages
+      shell: ". {{ base_path }}/{{ virtual_env }}/bin/activate && pip install --upgrade {{ pip_packages }}"
+      when: pip_packages is defined and pip_packages != None

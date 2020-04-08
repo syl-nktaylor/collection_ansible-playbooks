@@ -1,0 +1,46 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on RHEL 7.4 and Ubuntu 18.04
+#------------------------------------------------------------------------------
+
+# Use ntp as example
+- hosts: all
+  tasks:
+    - name: RHEL 7
+      set_fact:
+        ntp_service: "ntpd"
+        ntp_pkg: "ntp"
+      when: (ansible_os_family == "RedHat" and ansible_distribution_major_version == "7")
+
+    - name: Ubuntu
+      set_fact:
+        ntp_service: "ntp"
+        ntp_pkg: "ntp"
+      when: (ansible_os_family == "Debian")
+
+    - name: Install package
+      package:
+        name: "{{ ntp_pkg }}"
+        state: present
+
+    - name: Start ntp service
+      systemd:
+        name: "{{ ntp_service }}"
+        state: started
+        enabled: yes
+
+    - name: configure ntp daemon and reload
+             # do nothing
+      shell: pwd
+             # Configure
+             #template:
+             #  src: "{{ ntp_pkg }}.conf.j2"
+             # dest: "/etc/{{ ntp_pkg }}.conf"
+             # mode: 0644
+      notify: restart_service
+
+  handlers:
+    - name: restart_service
+      systemd:
+        name: "{{ ntp_service }}"
+        daemon_reload: yes

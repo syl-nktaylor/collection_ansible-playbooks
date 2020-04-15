@@ -1,0 +1,5 @@
+---
+packages_os:
+ - bzip2
+ - curl
+ - emacs

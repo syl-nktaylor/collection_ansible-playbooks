@@ -1,0 +1,4 @@
+---
+packages_os_arch:
+ - g++-multilib
+ - libc6-dev-i386

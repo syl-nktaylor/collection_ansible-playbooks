@@ -1,0 +1,29 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on Ubuntu 18.04
+#------------------------------------------------------------------------------
+
+- hosts: all
+  tasks:
+    - name: get architecture independent packages for each OS
+      include_vars: "{{ item }}"
+      with_first_found:
+        - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+
+    - name: get architecture specific packages for each OS
+      include_vars: "{{ item }}"
+      with_first_found:
+        - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.yml"
+
+        # Use Ubuntu as example
+    - name: install Ubuntu packages
+      apt:
+        name: "{{ item }}"
+        state: latest
+        update_cache: yes
+        autoclean: yes
+        autoremove: yes
+      with_items:
+        - "{{ packages_os }}"
+        - "{{ packages_os_arch }}"
+      when: (ansible_distribution == "Ubuntu")

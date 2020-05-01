@@ -1,0 +1,16 @@
+---
+#------------------------------------------------------------------------------
+# Note: Tested on Ubuntu 18.04
+#------------------------------------------------------------------------------
+
+- hosts: all
+  tasks:
+    - name: Create SSH configuration
+            # Assumes file already exists
+      blockinfile:
+        path: "/home/ci/.ssh/config"
+        block: |
+          host example*
+               User ci
+               IdentityFile ~/.ssh/id_rsa
+               StrictHostKeyChecking no

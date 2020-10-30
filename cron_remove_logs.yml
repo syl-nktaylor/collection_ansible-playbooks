@@ -1,0 +1,14 @@
+---
+# ---
+# Note: Tested on Ubuntu 20.04
+# ---
+
+- hosts: all
+  tasks:
+    - name: Add cron job to remove logs
+      cron:
+        name: "remove-temp-logs"
+        job: "find /temp/log* -maxdepth 1 -mtime +7 -type f -delete"
+        day: "1"
+        hour: "23"
+        minute: "55"

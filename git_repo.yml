@@ -1,0 +1,30 @@
+---
+# ---
+# Note: Tested on Ubuntu 20.04
+# ---
+
+- hosts: all
+  tasks:
+    - name: Install git if not present
+      become: yes
+      apt:
+        name: git
+        state: present
+      
+    - name: Create git checkout dir
+      file:
+        path: "~/repos/local_git_repo"
+        state: directory
+    
+    - name: Clone git repo
+      git:
+        accept_hostkey: yes
+        dest: "~/repos/local_git_repo"
+        repo: "~/remote_git_repo" 
+
+    - name: Add cron job to update git repo daily
+      cron:
+        name: "update-git-repo"
+        job: "git -C ~/repos/local_git_repo pull"
+        hour: "23"
+        minute: "55"

@@ -1,0 +1,23 @@
+---
+# ---
+# Note: Tested on Ubuntu 20.04
+# ---
+
+- hosts: all
+  tasks:
+    - name: Update Debian packages
+      become: yes
+      apt:
+        update_cache: yes # apt-get update
+        upgrade: safe
+        autoremove: yes
+      when: ansible_facts["os_family"] == "Debian"
+
+    - name: Update RedHat packages
+      become: yes
+      yum:
+        update_cache: yes
+        state: latest
+        name: "*" # yum -y update
+        autoremove: yes
+      when: ansible_facts["os_family"] == "RedHat"

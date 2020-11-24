@@ -1,0 +1,45 @@
+---
+# ---
+# Note: Tested on Ubuntu 20.04
+# ---
+
+- hosts: all
+  become: yes
+  vars:
+    swapfile: "/swap_extra"
+    swapsize: "1G"
+    swappiness: "10"
+  tasks:
+   - name: Ensure file does not exist
+     stat:
+       path: "{{ swapfile }}"
+     register: swap_file
+     failed_when: swap_file.stat.exists
+
+   - name: Create file
+     command: fallocate -l {{ swapsize }} {{ swapfile }}
+
+   - name: Set permissions
+     file:
+       path: "{{ swapfile }}"
+       owner: root
+       mode: 0600
+
+   - name: Setup file
+     command: mkswap {{ swapfile }}
+
+   - name: Activate file
+     command: swapon {{ swapfile }}
+
+   - name: Mount file
+     mount:
+       path: "none"
+       src: "{{ swapfile }}"
+       fstype: "swap"
+       state: "present"
+
+   - name: Change swappiness
+     sysctl:
+       name: vm.swappiness
+       value: "{{ swappiness }}"
+ 

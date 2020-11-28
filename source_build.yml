@@ -1,0 +1,52 @@
+---
+# ---
+# Note: Tested on Ubuntu 20.04
+# Example: tmux release from github
+# Prerequisites: all tmux dependencies
+# ---
+
+- hosts: all
+  vars:
+    tmp_dir: "/tmp"
+    build_dir: "build"
+    source_file: "tmux-3.1c"
+  tasks:
+   - name: Unpack source files
+     unarchive:
+       src: "{{ tmp_dir }}/{{ source_file }}.tar.gz"
+       dest: "{{ tmp_dir }}"
+       remote_src: yes
+
+   - name: Clean up build dir
+     become: yes
+     file:
+       path: "{{ tmp_dir }}/{{ build_dir }}"
+       state: absent
+
+   - name: Create build dir
+     file:
+       path: "{{ tmp_dir }}/{{ build_dir }}"
+       state: directory
+
+   - name: Autogen
+     become: yes
+     command: "sh autogen.sh"
+     args:
+       chdir: "{{ tmp_dir }}/{{ source_file }}"
+
+   - name: Configure
+     become: yes
+     command: "./configure --prefix={{ tmp_dir}}/{{ build_dir }}"
+     args:
+       chdir: "{{ tmp_dir }}/{{ source_file }}"
+
+   - name: Make
+     command: "make"
+     args:
+       chdir: "{{ tmp_dir }}/{{ source_file }}"
+
+   - name: Make install
+     become: yes
+     command: "make install"
+     args:
+       chdir: "{{ tmp_dir }}/{{ source_file }}"
